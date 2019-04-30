@@ -6,9 +6,9 @@ import (
 	"github.com/tjarratt/babble"
 	"os"
 	"os/exec"
+	"regexp"
 	"runtime"
 	"strings"
-	"unicode"
 )
 
 var word string
@@ -44,7 +44,7 @@ func TakeTurn() bool {
 			fmt.Println("Did you enter any letters? Please enter a letter as guess!")
 		} else if len(guess) > 1 {
 			fmt.Println("Too Many letters! Please only enter a single letter guess!")
-		} else if !unicode.IsLetter(rune(guess[0])) {
+		} else if isLetter, _ := regexp.MatchString("^[a-zA-Z]", guess); !isLetter {
 			fmt.Println("No special characters! Please enter a valid letter as a guess!")
 		} else if arrayContainsGuess(correctGuesses, guess) || arrayContainsGuess(wrongGuesses, guess){
 			fmt.Println("You've already guessed that letter! Guess again!")
@@ -150,5 +150,5 @@ func clearScreen() {
 		cmd = exec.Command("cmd", "/c", "cls")
 	}
 	cmd.Stdout = os.Stdout
-	cmd.Run()
+	_ = cmd.Run()
 }
