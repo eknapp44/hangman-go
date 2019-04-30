@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"github.com/tjarratt/babble"
 	"os"
+	"os/exec"
+	"runtime"
 	"strings"
 	"unicode"
 )
@@ -21,7 +23,7 @@ const HiddenLetter string = "_"
 func main() {
 	InitializeGame()
 	displayIntroduction()
-
+	displayGameStatus()
 	for done := false; done == false; done = TakeTurn() {}
 
 	os.Exit(0)
@@ -50,6 +52,7 @@ func TakeTurn() bool {
 			break
 		}
 	}
+	clearScreen()
 	return processGuess(guess)
 }
 
@@ -137,4 +140,15 @@ func arrayContainsGuess(list []string, guess string) bool {
 		}
 	}
 	return false
+}
+
+func clearScreen() {
+	var cmd *exec.Cmd
+	if runtime.GOOS != "windows" {
+		cmd = exec.Command("clear")
+	} else {
+		cmd = exec.Command("cmd", "/c", "cls")
+	}
+	cmd.Stdout = os.Stdout
+	cmd.Run()
 }
